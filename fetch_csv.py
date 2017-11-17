@@ -26,7 +26,14 @@ def fetch(filename):
 
 def fetch_and_read(filename='data.csv'):
     fetch(filename)
-    return pd.read_csv(filename, converters=converters_for_labels())
+    df = pd.read_csv(filename, converters=converters_for_labels())
+    irrelevant_cols = [
+        col for col in df.columns
+        if not (col == 'reqText' or col in LABELS)
+    ]
+    for col in irrelevant_cols:
+        del df[col]
+    return df
 
 
 def xbool(val):
